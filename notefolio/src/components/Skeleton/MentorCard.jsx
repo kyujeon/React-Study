@@ -19,13 +19,13 @@ function MentorCard() {
             <div className="relative w-full">
               <Skeleton className="w-full h-52 rounded-t-lg rounded-b-none" />
               {mentor.job === "마케터" && (
-                <Badge className="absolute bottom-4 right-4 py-1 rounded-sm bg-blue-600">
+                <Badge className="absolute bottom-4 right-4 py-1 rounded-sm bg-blue-600 text-white">
                   <Crosshair />
                   {mentor.job}
                 </Badge>
               )}
               {mentor.job === "디자이너" && (
-                <Badge className="absolute bottom-4 right-4 py-1 rounded-sm bg-green-600">
+                <Badge className="absolute bottom-4 right-4 py-1 rounded-sm bg-green-600 text-white">
                   <WandSparkles />
                   {mentor.job}
                 </Badge>
