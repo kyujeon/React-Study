@@ -1,3 +1,4 @@
+import axios from "axios";
 import {
   AppBanner,
   AppCompanyLink,
@@ -7,7 +8,13 @@ import {
   AppFooter,
 } from "./components/common";
 
-import { ImageCard, MentorCard, RecruitCard } from "./components/Skeleton";
+import {
+  ImageCard,
+  ImageCardProp,
+  MentorCard,
+  RecruitCard,
+} from "./components/Skeleton";
+
 import {
   Button,
   Dialog,
@@ -18,7 +25,52 @@ import {
   DialogTrigger,
 } from "./components/ui";
 
+import { useEffect, useState } from "react";
+
 function App() {
+  const [data, setData] = useState(null); // Unsplash API 에서 받은 데이터 전부
+  // const [Images, setImages] = useState([]); // Unsplash API에서 받은 데이터 전체 중 실제로 필요한 image 데이터
+
+  const [koreaImages, setKoreaImages] = useState([]);
+  const [japanImages, setJapanImages] = useState([]);
+  const API_KEY = "KMMSXsPEVEi25NOMNBEM_b1iZKxEQCjFtoWoTU_udho";
+  const API_URL = `https://api.unsplash.com/search/photos/?client_id=${API_KEY}`;
+
+  // // Unsplash API 호출
+  // const fetchAPI = async () => {
+  //   const API_KEY = "KMMSXsPEVEi25NOMNBEM_b1iZKxEQCjFtoWoTU_udho";
+  //   const API_URL = `https://api.unsplash.com/search/photos/?client_id=${API_KEY}`;
+
+  //   const res = await axios.get(`${API_URL}&page=1&query=korea`);
+
+  //   console.log("res :", res);
+
+  //   // const 실제로 필요한 데이터 = res.data;
+  //   setData(res.data);
+  //   // const 스켈레톤이;ㅣ미지컴포넌트에 쓰일 데이터 = res.data.results;
+  //   setImages(res.data.results);
+  // };
+
+  const fetchKorea = async () => {
+    const res = await axios.get(`${API_URL}&page=1&query=korea&per_page=12`);
+    setKoreaImages(res.data.results);
+  };
+
+  const fetchJapan = async () => {
+    const res = await axios.get(`${API_URL}&page=1&query=japan&per_page=12`);
+    setJapanImages(res.data.results);
+  };
+
+  // // Unsplash API 조회 함수 실행
+  // useEffect(() => {
+  //   fetchAPI();
+  // }, []);
+
+  useEffect(() => {
+    fetchKorea();
+    fetchJapan();
+  }, []);
+
   return (
     <div className="w-full">
       {/* 베너 */}
@@ -37,20 +89,26 @@ function App() {
         {/* Sticky Menu */}
         <StickyMenu />
 
-        {/* Image Card */}
+        {/* Image Card Prop */}
         <section className="w-full grid grid-cols-6 gap-6 mt-10 px-20">
-          <ImageCard />
-          <ImageCard />
-          <ImageCard />
-          <ImageCard />
-          <ImageCard />
-          <ImageCard />
-          <ImageCard />
-          <ImageCard />
-          <ImageCard />
-          <ImageCard />
-          <ImageCard />
-          <ImageCard />
+          {koreaImages.map((image, index) => {
+            return (
+              <Dialog>
+                <DialogTrigger>
+                  <ImageCardProp image={image} />
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Are you absolutely sure?</DialogTitle>
+                    <DialogDescription>
+                      This action cannot be undone. This will permanently delete
+                      your account and remove your data from our servers.
+                    </DialogDescription>
+                  </DialogHeader>
+                </DialogContent>
+              </Dialog>
+            );
+          })}
         </section>
 
         {/* Mentor */}
@@ -71,31 +129,24 @@ function App() {
 
         {/* Image Card */}
         <section className="w-full grid grid-cols-6 gap-6 mt-10 px-20">
-          <Dialog>
-            <DialogTrigger>
-              <ImageCard />
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Are you absolutely sure?</DialogTitle>
-                <DialogDescription>
-                  This action cannot be undone. This will permanently delete
-                  your account and remove your data from our servers.
-                </DialogDescription>
-              </DialogHeader>
-            </DialogContent>
-          </Dialog>
-          <ImageCard />
-          <ImageCard />
-          <ImageCard />
-          <ImageCard />
-          <ImageCard />
-          <ImageCard />
-          <ImageCard />
-          <ImageCard />
-          <ImageCard />
-          <ImageCard />
-          <ImageCard />
+          {japanImages.map((image, index) => {
+            return (
+              <Dialog>
+                <DialogTrigger>
+                  <ImageCardProp image={image} />
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Are you absolutely sure?</DialogTitle>
+                    <DialogDescription>
+                      This action cannot be undone. This will permanently delete
+                      your account and remove your data from our servers.
+                    </DialogDescription>
+                  </DialogHeader>
+                </DialogContent>
+              </Dialog>
+            );
+          })}
         </section>
       </main>
       <div className="h-[114px] flex flex-col items-center gap-6 my-20 ">
