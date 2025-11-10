@@ -8,7 +8,15 @@ import {
 } from "./components/common";
 
 import { ImageCard, MentorCard, RecruitCard } from "./components/Skeleton";
-import { Button } from "./components/ui";
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./components/ui";
 
 function App() {
   return (
@@ -63,7 +71,20 @@ function App() {
 
         {/* Image Card */}
         <section className="w-full grid grid-cols-6 gap-6 mt-10 px-20">
-          <ImageCard />
+          <Dialog>
+            <DialogTrigger>
+              <ImageCard />
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Are you absolutely sure?</DialogTitle>
+                <DialogDescription>
+                  This action cannot be undone. This will permanently delete
+                  your account and remove your data from our servers.
+                </DialogDescription>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
           <ImageCard />
           <ImageCard />
           <ImageCard />
