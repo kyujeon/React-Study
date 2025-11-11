@@ -4,3 +4,4 @@ export { AppHeader } from "./AppHeader";
 export { AppMainGallery } from "./AppMainGallery";
 export { StickyMenu } from "./StickyMenu";
 export { AppFooter } from "./AppFooter";
+export { AppBottomLogin } from "./AppBottomLogin";

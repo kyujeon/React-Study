@@ -11,11 +11,10 @@ import { MENTORS } from "../constants";
 
 function MentorCard() {
   return (
-    <div className="grid grid-cols-6 gap-6">
-      {/* 멘토 카드 */}
-      {MENTORS.map((mentor) => {
-        return (
-          <Card className="w-full p-0 gap-0">
+    <>
+      <div className="flex 2xl:hidden items-center gap-6 overflow-x-scroll">
+        {MENTORS.map((mentor) => (
+          <Card key={mentor.name} className="min-w-[271px] w-full p-0 gap-0">
             <div className="relative w-full">
               <Skeleton className="w-full h-52 rounded-t-lg rounded-b-none" />
               {mentor.job === "마케터" && (
@@ -31,14 +30,14 @@ function MentorCard() {
                 </Badge>
               )}
             </div>
-            {/* 멘토정보 */}
+
             <div className="flex flex-col gap-2 p-4">
               <p className="text-lg font-semibold">{mentor.name} 멘토</p>
               <Separator className="mb-1" />
               <div className="flex flex-col gap-1">
                 <div className="flex items-center gap-1">
                   <BadgeCheck fill="#dc2626" className="text-white" />
-                  <p className="text-sm"> {mentor.career} </p>
+                  <p className="text-sm">{mentor.career}</p>
                 </div>
                 <div className="flex items-center gap-1">
                   {mentor.job === "마케터" && (
@@ -47,14 +46,55 @@ function MentorCard() {
                   {mentor.job === "디자이너" && (
                     <Briefcase fill="#16a34a" className="text-white" />
                   )}
-                  <p className="text-sm"> {mentor.role} </p>
+                  <p className="text-sm">{mentor.role}</p>
                 </div>
               </div>
             </div>
           </Card>
-        );
-      })}
-    </div>
+        ))}
+      </div>
+      <div className="hidden 2xl:grid grid-cols-6 gap-6">
+        {MENTORS.map((mentor) => (
+          <Card key={mentor.name} className="w-full p-0 gap-0">
+            <div className="relative w-full">
+              <Skeleton className="w-full h-52 rounded-t-lg rounded-b-none" />
+              {mentor.job === "마케터" && (
+                <Badge className="absolute bottom-4 right-4 py-1 rounded-sm bg-blue-600 text-white">
+                  <Crosshair />
+                  {mentor.job}
+                </Badge>
+              )}
+              {mentor.job === "디자이너" && (
+                <Badge className="absolute bottom-4 right-4 py-1 rounded-sm bg-green-600 text-white">
+                  <WandSparkles />
+                  {mentor.job}
+                </Badge>
+              )}
+            </div>
+
+            <div className="flex flex-col gap-2 p-4">
+              <p className="text-lg font-semibold">{mentor.name} 멘토</p>
+              <Separator className="mb-1" />
+              <div className="flex flex-col gap-1">
+                <div className="flex items-center gap-1">
+                  <BadgeCheck fill="#dc2626" className="text-white" />
+                  <p className="text-sm">{mentor.career}</p>
+                </div>
+                <div className="flex items-center gap-1">
+                  {mentor.job === "마케터" && (
+                    <Briefcase fill="#2563eb" className="text-white" />
+                  )}
+                  {mentor.job === "디자이너" && (
+                    <Briefcase fill="#16a34a" className="text-white" />
+                  )}
+                  <p className="text-sm">{mentor.role}</p>
+                </div>
+              </div>
+            </div>
+          </Card>
+        ))}
+      </div>
+    </>
   );
 }
 

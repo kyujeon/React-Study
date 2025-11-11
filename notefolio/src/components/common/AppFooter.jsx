@@ -11,7 +11,7 @@ import { faBookOpen, faInbox } from "@fortawesome/free-solid-svg-icons";
 
 function AppFooter() {
   return (
-    <footer className="w-full h-9 flex items-center justify-between border-t px-8">
+    <footer className="hidden w-full h-9 lg:flex items-center justify-between border-t px-8">
       {/* 텍스트 묶음 */}
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-2">

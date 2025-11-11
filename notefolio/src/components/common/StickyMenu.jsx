@@ -92,22 +92,24 @@ function StickyMenu() {
   ];
   return (
     <section className="sticky top-14 z-10 w-full flex items-center justify-center py-2 gap-10 mt-20 bg-white">
-      <div className="flex flex-col gap-2">
+      <div className="hidden min-w-fit lg:flex flex-col gap-2">
         {/* 아이콘 */}
         <ArrowUpDown className="text-neutral-700" />
         {/* 아이콘 라벨 */}
         <p className="text-sm">정렬</p>
       </div>
-      <Separator orientation="vertical" className="h-10!" />
-      {categories.map((category) => {
-        const IconComponent = category.icon;
-        return (
-          <div className="flex flex-col items-center gap-2">
-            <IconComponent className="text-neutral-700" />
-            <p className="text-sm"> {category.label} </p>
-          </div>
-        );
-      })}
+      <Separator orientation="vertical" className="hidden lg:block h-10!" />
+      <div className="flex items-center gap-12 overflow-x-scroll">
+        {categories.map((category) => {
+          const IconComponent = category.icon;
+          return (
+            <div className="min-w-fit flex flex-col items-center gap-2">
+              <IconComponent className="text-neutral-700" />
+              <p className="text-sm"> {category.label} </p>
+            </div>
+          );
+        })}
+      </div>
     </section>
   );
 }

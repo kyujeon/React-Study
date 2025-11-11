@@ -3,7 +3,7 @@ import { Separator } from "../ui/separator";
 
 function AppCompanyLink() {
   return (
-    <div className="w-full h-[34px] flex items-center gap-3 px-8">
+    <div className="hidden w-full h-[34px] lg:flex items-center gap-3 px-8">
       <Webhook size={16} className="text-neutral-400" />
       <Separator orientation="vertical" className="h-3!" />
       <p className="font-semibold text-sm">notefolio</p>

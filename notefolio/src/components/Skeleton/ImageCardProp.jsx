@@ -22,7 +22,7 @@ function ImageCardProp({ image }) {
           />
           <p className="text-sm">{image.user.username}</p>
         </div>
-        <div className="flex items-center gap-.">
+        <div className="flex items-center gap-3">
           {/* 조회수 */}
           <div className="flex items-center gap-1">
             <ChartNoAxesColumn size={18} className="text-neutral-400" />

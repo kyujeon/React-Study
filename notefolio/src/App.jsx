@@ -6,24 +6,14 @@ import {
   AppMainGallery,
   StickyMenu,
   AppFooter,
+  AppBottomLogin,
 } from "./components/common";
 
 import {
-  ImageCard,
-  ImageCardProp,
   MentorCard,
   RecruitCard,
+  ImageCardDialog,
 } from "./components/Skeleton";
-
-import {
-  Button,
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "./components/ui";
 
 import { useEffect, useState } from "react";
 
@@ -90,29 +80,14 @@ function App() {
         <StickyMenu />
 
         {/* Image Card Prop */}
-        <section className="w-full grid grid-cols-6 gap-6 mt-10 px-20">
+        <section className="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6 mt-6 px-6 lg:px-20">
           {koreaImages.map((image, index) => {
-            return (
-              <Dialog>
-                <DialogTrigger>
-                  <ImageCardProp image={image} />
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Are you absolutely sure?</DialogTitle>
-                    <DialogDescription>
-                      This action cannot be undone. This will permanently delete
-                      your account and remove your data from our servers.
-                    </DialogDescription>
-                  </DialogHeader>
-                </DialogContent>
-              </Dialog>
-            );
+            return <ImageCardDialog image={image} />;
           })}
         </section>
 
         {/* Mentor */}
-        <section className="w-full flex flex-col gap-6 px-20 py-12 mt-12 bg-black">
+        <section className="w-full flex flex-col gap-6 py-12 px-6 lg:px-20 mt-12 bg-black">
           <h3 className="scroll-m-20 text-2xl text-white font-semibold tracking-tight">
             포트폴리오 피드백부터 커리어 상담까지!
           </h3>
@@ -128,46 +103,16 @@ function App() {
         </section>
 
         {/* Image Card */}
-        <section className="w-full grid grid-cols-6 gap-6 mt-10 px-20">
+        <section className="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6 mt-6 px-6 lg:px-20">
           {japanImages.map((image, index) => {
-            return (
-              <Dialog>
-                <DialogTrigger>
-                  <ImageCardProp image={image} />
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Are you absolutely sure?</DialogTitle>
-                    <DialogDescription>
-                      This action cannot be undone. This will permanently delete
-                      your account and remove your data from our servers.
-                    </DialogDescription>
-                  </DialogHeader>
-                </DialogContent>
-              </Dialog>
-            );
+            return <ImageCardDialog image={image} />;
           })}
         </section>
       </main>
-      <div className="h-[114px] flex flex-col items-center gap-6 my-20 ">
-        {/* 회원가입 및 로그인 */}
-        <div className="flex items-center">
-          <a href="" className="underline">
-            회원가입
-          </a>
-          <p className="mx-1">또는</p>
-          <a href="" className="underline">
-            로그인
-          </a>
-          <p>을 통해 19만개 이상의 크리에이티브를 발견하고 수집해보세요.</p>
-        </div>
-        {/* 회원가입 및 로그인 버튼 ui */}
-        <div className="flex items-center gap-4">
-          <Button>회원가입</Button>
-          <p className="text-sm">또는</p>
-          <Button variant={"outline"}>로그인</Button>
-        </div>
-      </div>
+      {/* 회원가입 로그인 반응형 */}
+      <AppBottomLogin />
+
+      {/* 푸터 */}
       <AppFooter />
     </div>
   );
