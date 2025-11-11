@@ -146,7 +146,7 @@ function AppHeader() {
               </SheetTrigger>
               <SheetContent
                 side="left"
-                className="w-[80%] sm:max-w-none overflow-y-scroll"
+                className="w-[80%] sm:max-w-none overflow-y-scroll lg:hidden"
               >
                 <SheetHeader>
                   <SheetTitle className="px-4 py-10">
@@ -160,12 +160,12 @@ function AppHeader() {
                     {/* 로고, 회원가입, 로그인 */}
                     <div className="flex flex-col px-4 gap-2">
                       <div className="pb-6">
-                        <p className="font-semibold text-sm">
+                        <div className="font-semibold text-sm">
                           회원가입 또는 로그인을 통해 13만개
-                        </p>
-                        <p className="font-semibold text-sm">
+                        </div>
+                        <div className="font-semibold text-sm">
                           이상의 크리에이티브를 발견하고 수집해보세요.
-                        </p>
+                        </div>
                       </div>
                       {/* 로그인 */}
                       <Button className="rounded-full font-extrabold text-xs h-10 bg-[#4ACAD4]">
@@ -198,14 +198,14 @@ function AppHeader() {
                     {/* 푸터내용 */}
                     <div>
                       <div className="flex flex-col gap-6 px-4 mt-10 mb-14">
-                        <p className="text-sm">서비스 소개</p>
-                        <p className="text-sm">공지사항</p>
-                        <p className="text-sm">운영정책</p>
-                        <p className="text-sm">개인정보처리방침</p>
-                        <p className="text-sm">자주묻는 질문</p>
-                        <p className="text-sm">광고상품</p>
+                        <div className="text-sm">서비스 소개</div>
+                        <div className="text-sm">공지사항</div>
+                        <div className="text-sm">운영정책</div>
+                        <div className="text-sm">개인정보처리방침</div>
+                        <div className="text-sm">자주묻는 질문</div>
+                        <div className="text-sm">광고상품</div>
                         <div className="flex items-center gap-1">
-                          <p className="text-sm">문의하기</p>
+                          <div className="text-sm">문의하기</div>
                           <ChevronDown size={16} className="font-extrabold" />
                         </div>
                       </div>
@@ -214,33 +214,35 @@ function AppHeader() {
 
                     {/* 패밀리사이트 */}
                     <div className="flex items-center justify-between gap-5 px-4 mt-10 mb-10">
-                      <p className="text-m font-black">패밀리 사이트</p>
+                      <div className="text-m font-black">패밀리 사이트</div>
                       <ChevronDown size={22} className="font-black" />
                     </div>
                     <Separator />
 
                     {/* 사업자정보 */}
                     <div className="flex flex-col px-4 mt-12 gap-4">
-                      <p className="font-black text-sm">
+                      <div className="font-black text-sm">
                         (주)스터닝 사업자 정보
-                      </p>
-                      <p className="text-xs text-neutral-400">
+                      </div>
+                      <div className="text-xs text-neutral-400">
                         사업자 등록번호 : 120-87-69298 | 직업정보제공:
                         J1200020190003 | 대표자명: 김승환 |
                         전화번호:070-8733-5858 | 주소 : 서울특별시 강남구
                         봉은사로112번 6길 2F
-                      </p>
-                      <p className="font-black text-sm">ⓒ2020 STUNNING INC. </p>
+                      </div>
+                      <div className="font-black text-sm">
+                        ⓒ2020 STUNNING INC.{" "}
+                      </div>
                     </div>
                     <div className="px-4 mt-6 mb-20">
                       {footerIcon.map((footerIcon) => {
                         return (
                           <div className="min-w-fit flex gap-2 mt-5">
                             <FontAwesomeIcon icon={footerIcon.icon} />
-                            <p className="text-xs font-black">
+                            <div className="text-xs font-black">
                               {" "}
                               {footerIcon.title}{" "}
-                            </p>
+                            </div>
                           </div>
                         );
                       })}
@@ -268,12 +270,66 @@ function AppHeader() {
               <SheetTrigger>
                 <Search size={18} />
               </SheetTrigger>
-              <SheetContent side="bottom" className="h-full sm:max-h-none">
+              <SheetContent
+                side="bottom"
+                className="h-full sm:max-h-none lg:hidden "
+              >
                 <SheetHeader>
-                  <SheetTitle>Are you absolutely sure?</SheetTitle>
                   <SheetDescription>
-                    This action cannot be undone. This will permanently delete
-                    your account and remove your data from our servers.
+                    <div className="flex items-center border px-4 mb-3 rounded-full bg-neutral-50">
+                      <Search size={18} className="text-neutral-400" />
+                      <Input
+                        placeholder="230,000개 이상의 크리에이티브 검색"
+                        className="h-10 outline-0 border-none focus-visible:ring-0 placeholder:text-neutral-400"
+                      />
+                    </div>
+                    <Separator />
+                    <div className="flex flex-col px-4 mt-4">
+                      <p className="font-black text-xs">
+                        노트폴리오 추천 검색어
+                      </p>
+                      <div className="flex mt-3 mb-10 gap-2">
+                        <Button
+                          variant="outline"
+                          className="rounded-full font-extrabold text-xs shadow-none"
+                        >
+                          포스터
+                        </Button>
+                        <Button
+                          variant="outline"
+                          className="rounded-full font-extrabold text-xs shadow-none"
+                        >
+                          로고
+                        </Button>
+                        <Button
+                          variant="outline"
+                          className="rounded-full font-extrabold text-xs shadow-none"
+                        >
+                          브랜딩
+                        </Button>
+                        <Button
+                          variant="outline"
+                          className="rounded-full font-extrabold text-xs shadow-none"
+                        >
+                          리플렛
+                        </Button>
+                        <Button
+                          variant="outline"
+                          className="rounded-full font-extrabold text-xs shadow-none"
+                        >
+                          포트폴리오
+                        </Button>
+                        <Button
+                          variant="outline"
+                          className="rounded-full font-extrabold text-xs shadow-none"
+                        >
+                          상세페이지
+                        </Button>
+                      </div>
+                      <p className="font-black text-xs">
+                        노트폴리오 추천 콘텐츠
+                      </p>
+                    </div>
                   </SheetDescription>
                 </SheetHeader>
               </SheetContent>
