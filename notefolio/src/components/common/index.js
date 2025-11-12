@@ -5,3 +5,4 @@ export { AppMainGallery } from "./AppMainGallery";
 export { StickyMenu } from "./StickyMenu";
 export { AppFooter } from "./AppFooter";
 export { AppBottomLogin } from "./AppBottomLogin";
+export { AppTooltip } from "./AppTooltip";

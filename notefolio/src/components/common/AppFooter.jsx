@@ -1,13 +1,7 @@
 import { Separator, Tooltip, TooltipContent, TooltipTrigger } from "../ui";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faApple,
-  faFacebook,
-  faGooglePlay,
-  faInstagram,
-  faYoutube,
-} from "@fortawesome/free-brands-svg-icons";
-import { faBookOpen, faInbox } from "@fortawesome/free-solid-svg-icons";
+import { FOOTER_ICON } from "../constants";
+import { AppTooltip } from ".";
 
 function AppFooter() {
   return (
@@ -30,64 +24,22 @@ function AppFooter() {
       </div>
       {/* 아이콘 묶음 */}
       <div className="flex items-center gap-3">
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <FontAwesomeIcon icon={faBookOpen} />
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>노트폴리오 메거진</p>
-          </TooltipContent>
-        </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <FontAwesomeIcon icon={faInbox} />
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>노트폴리오 레터</p>
-          </TooltipContent>
-        </Tooltip>
-        <Separator orientation="vertical" className="h-3!" />
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <FontAwesomeIcon icon={faInstagram} />
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>노트폴리오 인스타그램</p>
-          </TooltipContent>
-        </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <FontAwesomeIcon icon={faFacebook} />
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>노트폴리오 페이스북</p>
-          </TooltipContent>
-        </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <FontAwesomeIcon icon={faYoutube} />
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>노트폴리오 유튜브</p>
-          </TooltipContent>
-        </Tooltip>
-        <Separator orientation="vertical" className="h-3!" />
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <FontAwesomeIcon icon={faApple} />
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>iOS App</p>
-          </TooltipContent>
-        </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <FontAwesomeIcon icon={faGooglePlay} size="xs" />
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Android App</p>
-          </TooltipContent>
-        </Tooltip>
+        {FOOTER_ICON.map((item, index) => {
+          return (
+            <>
+              <AppTooltip description={item.title}>
+                <FontAwesomeIcon icon={item.icon} />
+              </AppTooltip>
+              {index === 1 && (
+                <Separator orientation="vertical" className="h-3!" />
+              )}
+              {index === 4 && (
+                <Separator orientation="vertical" className="h-3!" />
+              )}
+            </>
+          );
+        })}
+
         <img
           src="./public/logo.svg"
           alt="로고"

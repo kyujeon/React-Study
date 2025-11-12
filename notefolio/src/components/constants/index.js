@@ -1,3 +1,12 @@
+import {
+  faApple,
+  faFacebook,
+  faGooglePlay,
+  faInstagram,
+  faYoutube,
+} from "@fortawesome/free-brands-svg-icons";
+import { faBookOpen, faInbox } from "@fortawesome/free-solid-svg-icons";
+
 export const MENTORS = [
   {
     imgUrl: "",
@@ -79,5 +88,36 @@ export const RECRUIT = [
     logo: "",
     title: "Marketing Design Partner",
     company: "토스플레이스",
+  },
+];
+
+export const FOOTER_ICON = [
+  {
+    icon: faBookOpen,
+    title: "노트폴리오 매거진",
+  },
+  {
+    icon: faInbox,
+    title: "노플 레터",
+  },
+  {
+    icon: faInstagram,
+    title: "노트폴리오 인스타그램",
+  },
+  {
+    icon: faFacebook,
+    title: "노트폴리오 페이스북",
+  },
+  {
+    icon: faYoutube,
+    title: "노트폴리오 유튜브",
+  },
+  {
+    icon: faApple,
+    title: "iOS App",
+  },
+  {
+    icon: faGooglePlay,
+    title: "Android App",
   },
 ];
