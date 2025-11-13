@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { Separator } from "../ui";
 
-function StickyMenu({ onSetCategory }) {
+function StickyMenu({ props, onSetCategory }) {
   const categories = [
     {
       icon: Layers,
@@ -110,7 +110,7 @@ function StickyMenu({ onSetCategory }) {
   };
 
   return (
-    <section className="sticky top-14 z-10 w-full flex items-center justify-center py-2 gap-10 mt-20 bg-white">
+    <section className="sticky px-20 top-14 z-10 flex items-center justify-center py-2 gap-10 mt-20 bg-white">
       <div className="hidden min-w-fit lg:flex flex-col gap-2">
         {/* 아이콘 */}
         <ArrowUpDown className="text-neutral-700" />
@@ -126,8 +126,21 @@ function StickyMenu({ onSetCategory }) {
               className="min-w-fit flex flex-col items-center gap-2"
               onClick={() => onSetCategory(category.value)}
             >
-              <IconComponent className="text-neutral-700" />
-              <p className="text-sm"> {category.label} </p>
+              <IconComponent
+                className={`${
+                  props === category.value
+                    ? "text-[#4ACAD4]"
+                    : "text-neutral-700"
+                }`}
+              />
+              <p
+                className={`${
+                  props === category.value && "text-[#4ACAD4]"
+                } text-sm`}
+              >
+                {" "}
+                {category.label}{" "}
+              </p>
             </div>
           );
         })}

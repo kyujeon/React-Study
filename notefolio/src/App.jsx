@@ -13,6 +13,7 @@ import {
   MentorCard,
   RecruitCard,
   ImageCardDialog,
+  ImageCard,
 } from "./components/Skeleton";
 
 import { useEffect, useState } from "react";
@@ -27,6 +28,7 @@ function App() {
   const [category, setCategory] = useState("korea");
   const [searchValue, setSearchValue] = useState("");
   const [searchImages, setSearchImages] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const API_KEY = import.meta.env.VITE_UNSPLASH_API_KEY;
   const API_URL = `https://api.unsplash.com/search/photos/?client_id=${API_KEY}`;
@@ -39,8 +41,14 @@ function App() {
   };
 
   const fetchJapan = async () => {
-    const res = await axios.get(`${API_URL}&page=1&query=japan&per_page=12`);
-    setJapanImages(res.data.results);
+    try {
+      const res = await axios.get(`${API_URL}&page=1&query=japan&per_page=12`);
+      setJapanImages(res.data.results);
+    } catch (error) {
+      throw error;
+    } finally {
+      setLoading(false);
+    }
   };
 
   const fetchSearch = async () => {
@@ -60,7 +68,10 @@ function App() {
   }, [category]);
 
   useEffect(() => {
-    fetchJapan();
+    setLoading(true);
+    setTimeout(() => {
+      fetchJapan();
+    }, 2000);
   }, []);
 
   return (
@@ -79,7 +90,7 @@ function App() {
         <AppMainGallery />
 
         {/* Sticky Menu */}
-        <StickyMenu onSetCategory={setCategory} />
+        <StickyMenu props={category} onSetCategory={setCategory} />
 
         {/* Image Card Prop */}
         <section className="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6 mt-6 px-6 lg:px-20">
@@ -108,9 +119,14 @@ function App() {
 
         {/* Image Card */}
         <section className="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6 mt-6 px-6 lg:px-20">
-          {japanImages.map((image, index) => {
-            return <ImageCardDialog image={image} />;
-          })}
+          {loading ? (
+            <>
+              <ImageCard />
+              {/* x12 / 테스트 */}
+            </>
+          ) : (
+            japanImages.map((image, index) => <ImageCardDialog image={image} />)
+          )}
         </section>
       </main>
       {/* 회원가입 로그인 반응형 */}
