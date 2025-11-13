@@ -43,8 +43,8 @@ const menu = [
 ];
 
 function AppHeader({ onSetSearchValue, onFetchApi }) {
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
       onFetchApi();
     }
   };
@@ -85,7 +85,7 @@ function AppHeader({ onSetSearchValue, onFetchApi }) {
             <Search size={18} className="text-neutral-400" />
             <Input
               placeholder="230,000개 이상의 크리에이티브 검색"
-              onChange={(e) => onSetSearchValue?.(e.target.value)}
+              onChange={(event) => onSetSearchValue?.(event.target.value)}
               onKeyDown={handleKeyDown}
               className="w-64 outline-0 border-none focus-visible:ring-0 placeholder:text-neutral-400"
             />

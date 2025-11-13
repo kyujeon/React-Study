@@ -28,23 +28,8 @@ function App() {
   const [searchValue, setSearchValue] = useState("");
   const [searchImages, setSearchImages] = useState([]);
 
-  const API_KEY = "KMMSXsPEVEi25NOMNBEM_b1iZKxEQCjFtoWoTU_udho";
+  const API_KEY = import.meta.env.VITE_UNSPLASH_API_KEY;
   const API_URL = `https://api.unsplash.com/search/photos/?client_id=${API_KEY}`;
-
-  // // Unsplash API 호출
-  // const fetchAPI = async () => {
-  //   const API_KEY = "KMMSXsPEVEi25NOMNBEM_b1iZKxEQCjFtoWoTU_udho";
-  //   const API_URL = `https://api.unsplash.com/search/photos/?client_id=${API_KEY}`;
-
-  //   const res = await axios.get(`${API_URL}&page=1&query=korea`);
-
-  //   console.log("res :", res);
-
-  //   // const 실제로 필요한 데이터 = res.data;
-  //   setData(res.data);
-  //   // const 스켈레톤이;ㅣ미지컴포넌트에 쓰일 데이터 = res.data.results;
-  //   setImages(res.data.results);
-  // };
 
   const fetchKorea = async () => {
     const res = await axios.get(
