@@ -15,10 +15,12 @@ import {
   Input,
   Separator,
 } from "@/components/ui";
+import supabase from "@/utils/supabase";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
+import { toast } from "sonner";
 import { z } from "zod";
 
 const formSchema = z.object({
@@ -36,10 +38,36 @@ function SignIn() {
       password: "",
     },
   });
+  const navigate = useNavigate();
 
   // 로그인
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log(values);
+
+    try {
+      const {
+        data: { user, session },
+        error: signInError,
+      } = await supabase.auth.signInWithPassword({
+        email: values.email,
+        password: values.password,
+      });
+
+      if (signInError) {
+        toast.error(
+          signInError.message === "Invalid login credentials" &&
+            "아이디/비밀번호를 다시 확인해주세요."
+        );
+        return;
+      }
+      if (user && session) {
+        toast.success("로그인을 완료하였습니다.");
+        navigate("/");
+      }
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   };
 
   //  const navigate = useNavigate();

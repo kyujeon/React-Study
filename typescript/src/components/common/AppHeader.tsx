@@ -3,7 +3,7 @@ import { Separator } from "../ui";
 
 function AppHeader() {
   return (
-    <header className="w-full h-12 flex items-center justify-center p-6 bg-[#121212]">
+    <header className="fixed z-20 w-full min-h-12 h-12 flex items-center justify-center p-6 bg-[#121212]">
       <div className="w-full h-full max-w-[1328px] flex items-center justify-between">
         <div className="flex items-center gap-4">
           <img src="/icons/logo.svg" alt="@LOGO" className="w-7" />
