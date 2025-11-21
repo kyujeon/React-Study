@@ -22,6 +22,7 @@ import { useForm } from "react-hook-form";
 import { NavLink, useNavigate } from "react-router";
 import { toast } from "sonner";
 import { z } from "zod";
+import { UseAuthStore } from "../store/auth";
 
 const formSchema = z.object({
   email: z.email("올바른 형식의 이메일 주소를 입력해주세요."),
@@ -38,7 +39,9 @@ function SignIn() {
       password: "",
     },
   });
+
   const navigate = useNavigate();
+  const setUser = UseAuthStore((state) => state.setUser);
 
   // 로그인
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -61,6 +64,12 @@ function SignIn() {
         return;
       }
       if (user && session) {
+        setUser({
+          id: user.id,
+          email: user.email,
+          role: user.role,
+        });
+
         toast.success("로그인을 완료하였습니다.");
         navigate("/");
       }

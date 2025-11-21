@@ -11,14 +11,23 @@ import {
   SelectValue,
   Separator,
 } from "@/components/ui";
+import supabase from "@/utils/supabase";
 
-import { Asterisk, Image, ImageOff } from "lucide-react";
+import {
+  ArrowLeft,
+  Asterisk,
+  BookOpenCheck,
+  Image,
+  ImageOff,
+  Save,
+  Trash2,
+} from "lucide-react";
 import { useRef, useState } from "react";
 
 function CreateTopic() {
-  const [title, setTitle] = useState<string | null>(null);
+  const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState();
-  const [category, setCategory] = useState<string | null>(null);
+  const [category, setCategory] = useState<string>("");
   const [thumbnail, setThumbnail] = useState<File | string | null>(null);
 
   // => File 타입의 원본 데이터를 받음
@@ -76,6 +85,15 @@ function CreateTopic() {
     );
   };
 
+  //저장
+  const handleSave = async () => {
+    console.log(title);
+    console.log(category);
+    console.log(thumbnail);
+
+    // const { data, error } = await supabase.from("topics").insert([{}]).select();
+  };
+
   return (
     <main className="w-full flex-1 flex justify-center">
       <div className="w-full max-w-[1328px] h-full flex gap-6 py-6">
@@ -95,6 +113,8 @@ function CreateTopic() {
               <Input
                 placeholder="토픽제목을 입력하세요."
                 className="h-15 placeholder:text-base px-3 font-semibold border-none"
+                value={title}
+                onChange={(event) => setTitle(event.currentTarget.value)}
               />
             </div>
             <div className="flex flex-col gap-1">
@@ -124,7 +144,10 @@ function CreateTopic() {
                 <p className="text-neutral-400 text-base">카테고리</p>
               </div>
               {/* 셀렉트 박스 */}
-              <Select>
+              <Select
+                value={category}
+                onValueChange={(value) => setCategory(value)}
+              >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="토픽(주제) 선택" />
                 </SelectTrigger>
@@ -155,6 +178,7 @@ function CreateTopic() {
                 <p className="text-neutral-400 text-base">썸네일</p>
               </div>
               <div className="flex flex-col gap-2">
+                {/* 미리보기 */}
                 {handleRenderPreview()}
                 <Input
                   type="file"
@@ -177,6 +201,28 @@ function CreateTopic() {
             </div>
           </div>
         </div>
+      </div>
+      {/* 아래 버튼 */}
+      <div className="fixed bottom-12 flex items-center gap-2">
+        <Button variant={"outline"} size={"icon"}>
+          <ArrowLeft />
+        </Button>
+        <Button
+          variant={"outline"}
+          className="px-5! bg-amber-900/50!"
+          onClick={handleSave}
+        >
+          <Save />
+          저장
+        </Button>
+        <Button variant={"outline"} className="px-5! bg-emerald-900/50!">
+          <BookOpenCheck />
+          발행
+        </Button>
+        <Separator orientation="vertical" className="h-5!" />
+        <Button variant={"outline"} size={"icon"} className="bg-red-900/50!">
+          <Trash2 />
+        </Button>
       </div>
     </main>
   );
