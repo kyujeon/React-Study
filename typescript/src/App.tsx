@@ -15,6 +15,8 @@ import { Button, Input } from "./components/ui";
 import { HotTopic, NewTopic } from "./components/topic";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
+import { UseAuthStore } from "./pages/store/auth";
+import supabase from "./utils/supabase";
 
 const CATEGORIES = [
   { icon: List, label: "전체" },
@@ -29,18 +31,39 @@ const CATEGORIES = [
 
 function App() {
   const navigate = useNavigate();
+  const user = UseAuthStore((state) => state.user);
 
-  // 임시
-  const user = null;
-  const session = null;
-
-  const movetoPage = () => {
+  const movetoPage = async () => {
     // 1. 로그인 여부 체크
-    if (!user || !session) {
+    if (!user) {
       toast.warning("토픽 작성은 로그인 후 이용 가능합니다.");
       return;
     }
-    navigate("/create-topic");
+
+    // 토픽 작성하기 버튼 클릭 시, (빈)토픽 생성
+    const { data, error } = await supabase
+      .from("topics")
+      .insert([
+        {
+          author: user.id,
+          title: null,
+          category: null,
+          thumbnail: null,
+          content: null,
+          status: "TEMP",
+        },
+      ])
+      .select();
+
+    if (error) {
+      console.log(error);
+      toast.error(error.message);
+      return;
+    }
+
+    if (data) {
+      navigate(`/topic/${data[0].id}/create`);
+    }
   };
 
   return (

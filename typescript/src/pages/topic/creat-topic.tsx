@@ -1,4 +1,5 @@
 import { AppTextEditor } from "@/components/common";
+import { nanoid } from "nanoid";
 import {
   Button,
   Input,
@@ -23,8 +24,12 @@ import {
   Trash2,
 } from "lucide-react";
 import { useRef, useState } from "react";
+import { toast } from "sonner";
+import { useParams } from "react-router";
 
 function CreateTopic() {
+  const { topic_id } = useParams();
+
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState();
   const [category, setCategory] = useState<string>("");
@@ -87,11 +92,57 @@ function CreateTopic() {
 
   //저장
   const handleSave = async () => {
-    console.log(title);
-    console.log(category);
-    console.log(thumbnail);
+    // console.log(title);
+    // console.log(category);
+    // console.log(thumbnail);
 
-    // const { data, error } = await supabase.from("topics").insert([{}]).select();
+    if (!title && !category && !thumbnail && !content) {
+      toast.warning("빈 항목이 있습니다. 필수값을 입력해주세요!");
+      return;
+    }
+
+    // 1. 파일 업로드 시 , Supabase의 Storage 즉, bucket 폴더에 이미지를 먼저 업로드 한 후
+    // 이미지가 저장된 bucket 폴더의 경로 URL 주소를 우리가 관리하고 있는 Topics 테이블 thumbnail 컬럼에 문자열 형태
+    // 즉, string 타입(DB에서는 text 타입)으로 저장한다.
+
+    let thumbnailUrl: string | null = null;
+
+    // 최초로 썸네일을 DB에 저장할 경우 or 새로운 썸네일을 업로드할 경우
+    if (thumbnail && thumbnail instanceof File) {
+      // 썸네일 이미지를 storage에 업로드
+      const fileExt = thumbnail.name.split(".").pop(); // png 만 나옴
+      const fileName = `${nanoid()}.${fileExt}`; // nanoid
+      const filePath = `topics/${fileName}`;
+
+      const { error: fileUploadError } = await supabase.storage
+        .from("files")
+        .upload(filePath, thumbnail);
+      if (fileUploadError) throw fileUploadError;
+
+      const { data } = supabase.storage.from("files").getPublicUrl(filePath);
+
+      if (!data) {
+        toast.error("파일 불러오기에 실패하였습니다.");
+        throw new Error("파일 불러오기에 실패하였습니다.");
+      }
+      thumbnailUrl = data.publicUrl;
+    } else if (typeof thumbnail === "string") {
+      thumbnailUrl = thumbnail; // 기존 이미지 유지
+    }
+
+    const { data, error } = await supabase
+      .from("topics")
+      .update([
+        { title, category, thumbnail: thumbnailUrl, content, status: "TEMP" },
+      ])
+      .eq("id", topic_id)
+      .select();
+
+    if (error) throw error;
+    if (data) {
+      toast.success("작성 중인 토픽을 저장하였습니다.");
+      return;
+    }
   };
 
   return (

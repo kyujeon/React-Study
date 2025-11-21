@@ -10,6 +10,7 @@ import CreateTopic from "./pages/topic/creat-topic.tsx"; // 토픽 작성 페이
 import ReadTopic from "./pages/topic/read-topic.tsx"; // 토픽 조회 페이지
 import UpdateTopic from "./pages/topic/update-topic.tsx"; // 토픽 수정 페이지
 import RootLayout from "./pages/layout.tsx";
+import { UserProfile } from "./pages/user/profile.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -21,10 +22,12 @@ createRoot(document.getElementById("root")!).render(
           {/* AUTH */}
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/sign-in" element={<SignIn />} />
+          {/* USER */}
+          <Route path="/user/:user_id/profile" element={<UserProfile />} />
           {/* TOPIC */}
-          <Route path="/create-topic" element={<CreateTopic />} />
-          <Route path="/topics/:id" element={<ReadTopic />} />
-          <Route path="/topics/:id/edit" element={<UpdateTopic />} />
+          <Route path="/topic/:topic_id/create" element={<CreateTopic />} />
+          <Route path="/topic/:topic_id" element={<ReadTopic />} />
+          <Route path="/topic/:topic_id/edit" element={<UpdateTopic />} />
         </Route>
       </Routes>
     </BrowserRouter>
