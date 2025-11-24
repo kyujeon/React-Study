@@ -17,6 +17,7 @@ import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import { UseAuthStore } from "./pages/store/auth";
 import supabase from "./utils/supabase";
+import { useEffect, useState } from "react";
 
 const CATEGORIES = [
   { icon: List, label: "전체" },
@@ -32,6 +33,8 @@ const CATEGORIES = [
 function App() {
   const navigate = useNavigate();
   const user = UseAuthStore((state) => state.user);
+
+  const [topics, setTopics] = useState([]);
 
   const movetoPage = async () => {
     // 1. 로그인 여부 체크
@@ -65,6 +68,30 @@ function App() {
       navigate(`/topic/${data[0].id}/create`);
     }
   };
+
+  const fetchTopics = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("topics")
+        .select("*")
+        .eq("status", "PUBLISH");
+
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
+      if (data) {
+        setTopics(data);
+      }
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  };
+
+  useEffect(() => {
+    fetchTopics();
+  }, []);
 
   return (
     <div className="w-full max-w-[1328px] h-full flex items-start py-6 gap-4">
@@ -159,10 +186,9 @@ function App() {
             </p>
           </div>
           <div className="grid grid-cols-2 gap-6">
-            <NewTopic />
-            <NewTopic />
-            <NewTopic />
-            <NewTopic />
+            {topics.map((topics) => (
+              <NewTopic props={topics} />
+            ))}
           </div>
         </section>
       </div>

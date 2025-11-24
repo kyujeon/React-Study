@@ -25,13 +25,15 @@ import {
 } from "lucide-react";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
+import type { Block } from "@blocknote/core";
 
 function CreateTopic() {
   const { topic_id } = useParams();
+  const navigate = useNavigate();
 
   const [title, setTitle] = useState<string>("");
-  const [content, setContent] = useState();
+  const [content, setContent] = useState<Block[]>([]);
   const [category, setCategory] = useState<string>("");
   const [thumbnail, setThumbnail] = useState<File | string | null>(null);
 
@@ -133,7 +135,13 @@ function CreateTopic() {
     const { data, error } = await supabase
       .from("topics")
       .update([
-        { title, category, thumbnail: thumbnailUrl, content, status: "TEMP" },
+        {
+          title,
+          category,
+          thumbnail: thumbnailUrl,
+          content: JSON.stringify(content),
+          status: "TEMP",
+        },
       ])
       .eq("id", topic_id)
       .select();
@@ -141,6 +149,59 @@ function CreateTopic() {
     if (error) throw error;
     if (data) {
       toast.success("작성 중인 토픽을 저장하였습니다.");
+      return;
+    }
+  };
+
+  //발행
+  const handelPublish = async () => {
+    if (!title || !category || !thumbnail || !content) {
+      toast.warning("입력되지 않은 항목이 있습니다. 필수값을 입력해주세요.");
+      return;
+    }
+
+    let thumbnailUrl: string | null = null;
+
+    // 최초로 썸네일을 DB에 저장할 경우 or 새로운 썸네일을 업로드할 경우
+    if (thumbnail && thumbnail instanceof File) {
+      // 썸네일 이미지를 storage에 업로드
+      const fileExt = thumbnail.name.split(".").pop(); // png 만 나옴
+      const fileName = `${nanoid()}.${fileExt}`; // nanoid
+      const filePath = `topics/${fileName}`;
+
+      const { error: fileUploadError } = await supabase.storage
+        .from("files")
+        .upload(filePath, thumbnail);
+      if (fileUploadError) throw fileUploadError;
+
+      const { data } = supabase.storage.from("files").getPublicUrl(filePath);
+
+      if (!data) {
+        toast.error("파일 불러오기에 실패하였습니다.");
+        throw new Error("파일 불러오기에 실패하였습니다.");
+      }
+      thumbnailUrl = data.publicUrl;
+    } else if (typeof thumbnail === "string") {
+      thumbnailUrl = thumbnail; // 기존 이미지 유지
+    }
+    const { data, error } = await supabase
+      .from("topics")
+      .update([
+        {
+          title,
+          category,
+          thumbnail: thumbnailUrl,
+          content: JSON.stringify(content),
+          status: "PUBLISH",
+        },
+      ])
+      .eq("id", topic_id)
+      .select();
+
+    if (error) throw error;
+    if (data) {
+      toast.success("토픽을 발행하였습니다.");
+      navigate("/");
       return;
     }
   };
@@ -175,7 +236,7 @@ function CreateTopic() {
               </div>
               {/* BlockNote 텍스트 에디터 ui*/}
               <div className="w-full h-screen">
-                <AppTextEditor />
+                <AppTextEditor props={content} onSetContent={setContent} />
               </div>
             </div>
           </div>
@@ -266,7 +327,11 @@ function CreateTopic() {
           <Save />
           저장
         </Button>
-        <Button variant={"outline"} className="px-5! bg-emerald-900/50!">
+        <Button
+          variant={"outline"}
+          className="px-5! bg-emerald-900/50!"
+          onClick={handelPublish}
+        >
           <BookOpenCheck />
           발행
         </Button>

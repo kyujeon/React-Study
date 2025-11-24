@@ -3,8 +3,14 @@ import { BlockNoteView } from "@blocknote/mantine";
 import "@blocknote/mantine/style.css";
 import { useCreateBlockNote } from "@blocknote/react";
 import { ko } from "@blocknote/core/locales";
+import type { Block } from "@blocknote/core";
 
-function AppTextEditor() {
+interface Props {
+  props: Block[];
+  onSetContent: (params: Block[]) => void;
+}
+
+function AppTextEditor({ props, onSetContent }: Props) {
   // Creates a new editor instance.
   const editor = useCreateBlockNote({
     // 한국어 패치
@@ -12,7 +18,12 @@ function AppTextEditor() {
   });
 
   // Renders the editor instance using a React component.
-  return <BlockNoteView editor={editor} />;
+  return (
+    <BlockNoteView
+      editor={editor}
+      onChange={() => onSetContent(editor.document)}
+    />
+  );
 }
 
 export { AppTextEditor };
