@@ -1,27 +1,39 @@
-import "@blocknote/core/fonts/inter.css";
-import { BlockNoteView } from "@blocknote/mantine";
-import "@blocknote/mantine/style.css";
 import { useCreateBlockNote } from "@blocknote/react";
+import { BlockNoteView } from "@blocknote/mantine";
+import "@blocknote/core/fonts/inter.css";
+import "@blocknote/mantine/style.css";
 import { ko } from "@blocknote/core/locales";
 import type { Block } from "@blocknote/core";
+import { useEffect } from "react";
 
 interface Props {
   props: Block[];
-  onSetContent: (params: Block[]) => void;
+  onSetContent?: (params: Block[]) => void;
+  readonly?: boolean;
 }
 
-function AppTextEditor({ props, onSetContent }: Props) {
+function AppTextEditor({ props, readonly, onSetContent }: Props) {
   // Creates a new editor instance.
   const editor = useCreateBlockNote({
-    // 한국어 패치
     dictionary: ko,
   });
+
+  useEffect(() => {
+    if (props && props.length > 0) {
+      editor.replaceBlocks(editor.document, props);
+    }
+  }, []);
 
   // Renders the editor instance using a React component.
   return (
     <BlockNoteView
       editor={editor}
-      onChange={() => onSetContent(editor.document)}
+      editable={!readonly}
+      onChange={() => {
+        if (!readonly) {
+          onSetContent?.(editor.document);
+        }
+      }}
     />
   );
 }

@@ -13,28 +13,50 @@ import {
 } from "lucide-react";
 import { Button, Input } from "./components/ui";
 import { HotTopic, NewTopic } from "./components/topic";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import { toast } from "sonner";
 import { UseAuthStore } from "./pages/store/auth";
 import supabase from "./utils/supabase";
 import { useEffect, useState } from "react";
+import type { Topic } from "./types";
 
 const CATEGORIES = [
-  { icon: List, label: "전체" },
-  { icon: Lightbulb, label: "인문학" },
-  { icon: Rocket, label: "스타트업" },
-  { icon: CodeXml, label: "IT·프로그래밍" },
-  { icon: Goal, label: "서비스·전략 기획" },
-  { icon: ChartNoAxesCombined, label: "마케팅" },
-  { icon: DraftingCompass, label: "디자인·일러스트" },
-  { icon: Footprints, label: "자기개발" },
+  { icon: List, label: "전체", value: "" },
+  { icon: Lightbulb, label: "인문학", value: "humidity" },
+  { icon: Rocket, label: "스타트업", value: "start-up" },
+  { icon: CodeXml, label: "IT·프로그래밍", value: "progamming" },
+  { icon: Goal, label: "서비스·전략 기획", value: "planning" },
+  { icon: ChartNoAxesCombined, label: "마케팅", value: "marketing" },
+  { icon: DraftingCompass, label: "디자인·일러스트", value: "desing" },
+  { icon: Footprints, label: "자기개발", value: "self-development" },
 ];
 
 function App() {
   const navigate = useNavigate();
   const user = UseAuthStore((state) => state.user);
 
-  const [topics, setTopics] = useState([]);
+  const [topics, setTopics] = useState<Topic[]>([]);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const category = searchParams.get("category") || "";
+  const [searchValue, setSearchValue] = useState<string>("");
+
+  // 1. 전체 항목을 클릭했을 경우, "전체"라는 항목의 value 값을 어떻게 할것인가? default
+  // 2. 이미 선택된 항목에 대해, 선택된 항목 재선택시 어떻게 할 것인가? 취소하고 다시
+  // 3. 도메인 URL에 카테고리 value 값을 보여줄 것인가? no
+  // 4. supabase Read의 Filtering 기능 사용할 때 어떻게 할 것인가?
+  // 5. 검색 기능과의 차별점을 둘 것인가? (선택사항)
+
+  const handleCategoryChange = (value: string) => {
+    // http://localhost:5173/?category=start-up
+    if (value === category) return; // => 선택한 항목 재선택한 것이므로 무시
+    else if (value === "") setSearchParams({});
+    else setSearchParams({ category: value });
+  };
+
+  const handleSearch = () => {
+    fetchTopics(searchValue);
+  };
 
   const movetoPage = async () => {
     // 1. 로그인 여부 체크
@@ -69,17 +91,25 @@ function App() {
     }
   };
 
-  const fetchTopics = async () => {
+  const fetchTopics = async (searchValue?: string) => {
     try {
-      const { data, error } = await supabase
-        .from("topics")
-        .select("*")
-        .eq("status", "PUBLISH");
+      const query = supabase.from("topics").select("*").eq("status", "PUBLISH");
+
+      if (searchValue && searchValue.trim() !== "") {
+        query.like("title", `%${searchValue}%`);
+      }
+
+      if (category && category.trim() !== "") {
+        query.eq("category", category);
+      }
+
+      const { data, error } = await query;
 
       if (error) {
         toast.error(error.message);
         return;
       }
+
       if (data) {
         setTopics(data);
       }
@@ -91,6 +121,22 @@ function App() {
 
   useEffect(() => {
     fetchTopics();
+  }, [category]);
+
+  //소셜 로그인 헤더에 표기 => display name 으로 설정하고 싶은데 잘 모르겠습니다.
+  useEffect(() => {
+    const restoreUser = async () => {
+      const { data } = await supabase.auth.getUser();
+      if (data.user) {
+        UseAuthStore.getState().setUser({
+          id: data.user.id,
+          email: data.user.email,
+          role: data.user.role,
+        });
+      }
+    };
+
+    restoreUser();
   }, []);
 
   return (
@@ -102,15 +148,20 @@ function App() {
           <ChevronDown />
         </div>
         <div className="flex flex-col gap-2">
-          {CATEGORIES.map((category) => {
-            const IconComponent = category.icon;
+          {CATEGORIES.map((item, index) => {
+            const IconComponent = item.icon;
+            const isActive = item.value === category;
+
             return (
               <Button
-                variant="ghost"
-                className="flex justify-start text-neutral-400 hover:pl-5 duration-500"
+                key={index}
+                className={`${
+                  isActive && "pl-6! text-white! bg-card!"
+                } flex justify-start text-neutral-500 bg-transparent hover:bg-card hover:text-white hover:pl-6 duration-500`}
+                onClick={() => handleCategoryChange(item.value)}
               >
                 <IconComponent />
-                {category.label}
+                {item.label}
               </Button>
             );
           })}
@@ -135,9 +186,14 @@ function App() {
             <Search size={24} className="text-neutral-500 -mr-2" />
             <Input
               placeholder="관심 있는 클래스, 토픽 주제를 검색하세요."
+              onChange={(event) => setSearchValue(event.target.value)}
               className="border-none bg-transparent! focus-visible:ring-0 placeholder:text-base"
             />
-            <Button variant={"secondary"} className="rounded-full">
+            <Button
+              variant={"secondary"}
+              className="rounded-full"
+              onClick={handleSearch}
+            >
               검색
             </Button>
           </div>
@@ -168,7 +224,7 @@ function App() {
           </div>
         </section>
         {/* NEW 토픽 */}
-        <section className="flex flex-col gap-6 pb-8">
+        <section className="flex-1 flex flex-col gap-6 pb-8">
           <div className="flex flex-col">
             <div className="flex items-center gap-2">
               <img
@@ -185,11 +241,29 @@ function App() {
               토픽을 작성해보세요.
             </p>
           </div>
-          <div className="grid grid-cols-2 gap-6">
-            {topics.map((topics) => (
-              <NewTopic props={topics} />
-            ))}
-          </div>
+          {topics.length === 0 ? (
+            <div className="w-full flex-1 flex items-center justify-center">
+              {" "}
+              <p className="text-neutral-400/50">
+                😢 조회 가능한 데이터가 없습니다.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-6">
+              {/* {topics
+                .sort(
+                  (a, b) =>
+                    new Date(b.created_at).getTime() -
+                    new Date(a.created_at).getTime()
+                )
+                .map((topic) => (
+                  <NewTopic props={topic} />
+                ))} */}
+              {[...topics].reverse().map((topic) => (
+                <NewTopic props={topic} />
+              ))}
+            </div>
+          )}
         </section>
       </div>
       <Button

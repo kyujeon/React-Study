@@ -7,18 +7,7 @@ import {
 } from "lucide-react";
 import { Card, Separator } from "../ui";
 import { useNavigate } from "react-router";
-
-interface Topic {
-  id: number;
-  created_at: Date;
-  updated_at: Date;
-  title: string;
-  content: string;
-  category: string;
-  thumbnail: string;
-  status: string;
-  author: string;
-}
+import type { Topic } from "@/types";
 
 interface Props {
   props: Topic;
